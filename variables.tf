@@ -9,7 +9,7 @@ variable "google_region" {
   default     = "europe-west3"
 }
 
-variable "google_backend_application_image_name" {
+variable "google_backend_application_image" {
   type        = string
-  description = "Backend application image name in Google Artifact repository."
+  description = "Backend application image URL."
 }

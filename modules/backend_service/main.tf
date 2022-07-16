@@ -11,7 +11,7 @@ resource "google_cloud_run_service" "main" {
   template {
     spec {
       containers {
-        image = data.google_container_registry_image.google_container_image.image_url
+        image = var.application_image
       }
     }
   }
