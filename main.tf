@@ -19,7 +19,7 @@ provider "google" {
 }
 
 module "backend_service" {
-  source = "./applications/backend_service"
+  source = "./modules/backend_service"
 
   google_region     = var.google_region
   google_image_name = var.google_backend_application_image_name
