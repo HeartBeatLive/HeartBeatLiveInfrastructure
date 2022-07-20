@@ -9,50 +9,17 @@ variable "google_region" {
   default     = "europe-west3"
 }
 
-variable "backend_application" {
-  type = object({
-    image : string,
-    max_scale : number,
-    vpc_connector : object({
-      machine_type : string,  # f1-micro, e2-micro, or e2-standard-4
-      min_instances : number, # from 2 to 9
-      max_instances : number  # from 3 to 10
-    })
-  })
-  description = "Backend VPC connector settings."
+variable "config_url" {
+  type        = string
+  description = "URL to configuration file."
 }
 
-variable "backend_redis" {
-  type = object({
-    memory_size_gb : number,
-    tier : string # BASIC or STANDARD_HA
-  })
-  description = "Backend Redis settings."
-  default = {
-    memory_size_gb = 1
-    tier           = "BASIC"
-  }
+variable "config_access_token" {
+  type        = string
+  description = "Access token that should be used to request a config file."
 }
 
-variable "backend_atlas_mongodb" {
-  type = object({
-    project_id : string,
-    cluster : object({
-      name : string,
-      type : string,
-      cloud_backup : bool,
-      instance_size_name : string,
-      region_name : string,
-      autoscaling : object({
-        enabled : bool,
-        scale_down_enabled : bool,
-        min_instance_size : string,
-        max_instance_size : string
-      }),
-      disk : object({
-        auto_scaling_enabled : bool,
-        size_gb : number
-      })
-    })
-  })
+variable "backend_application_image" {
+  type        = string
+  description = "Backend application image URL. For example: gcr.io/heartbeatlive/backend:v1"
 }

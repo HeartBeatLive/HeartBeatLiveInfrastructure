@@ -30,6 +30,13 @@ provider "google" {
 
 provider "mongodbatlas" {}
 
+module "config" {
+  source = "./modules/config"
+
+  config_url          = var.config_url
+  config_access_token = var.config_access_token
+}
+
 module "backend_network" {
   source = "./modules/backend_network"
 
@@ -44,17 +51,21 @@ module "backend_service" {
   google_region     = var.google_region
   vpc_subnet_name   = module.backend_network.subnet_name
   application = {
-    image     = var.backend_application.image
-    max_scale = var.backend_application.max_scale
+    image     = var.backend_application_image
+    max_scale = module.config.this.backendApplication.maxScale
   }
-  vpc_connector = var.backend_application.vpc_connector
+  vpc_connector = {
+    machine_type  = module.config.this.backendApplication.vpcConnector.machineType
+    min_instances = module.config.this.backendApplication.vpcConnector.minInstances
+    max_instances = module.config.this.backendApplication.vpcConnector.maxInstances
+  }
 }
 
 module "backend_redis" {
   source = "./modules/backend_redis"
 
-  memory_size_gb = var.backend_redis.memory_size_gb
-  tier           = var.backend_redis.tier
+  memory_size_gb = module.config.this.backendRedis.memorySizeGb
+  tier           = module.config.this.backendRedis.tier
   google_network = module.backend_network.id
   google_region  = var.google_region
 }
@@ -62,8 +73,24 @@ module "backend_redis" {
 module "backend_mongodb" {
   source = "./modules/backend_mongodb"
 
-  atlas_project_id = var.backend_atlas_mongodb.project_id
-  atlas_cluster    = var.backend_atlas_mongodb.cluster
+  atlas_project_id = module.config.this.backendAtlasMongodb.projectId
+  atlas_cluster = {
+    name               = module.config.this.backendAtlasMongodb.cluster.name
+    type               = module.config.this.backendAtlasMongodb.cluster.type
+    cloud_backup       = module.config.this.backendAtlasMongodb.cluster.cloudBackup
+    instance_size_name = module.config.this.backendAtlasMongodb.cluster.instanceSizeName
+    region_name        = module.config.this.backendAtlasMongodb.cluster.regionName
+    autoscaling = {
+      enabled            = module.config.this.backendAtlasMongodb.cluster.autoscaling.enabled
+      max_instance_size  = module.config.this.backendAtlasMongodb.cluster.autoscaling.maxInstanceSize
+      min_instance_size  = module.config.this.backendAtlasMongodb.cluster.autoscaling.minInstanceSize
+      scale_down_enabled = module.config.this.backendAtlasMongodb.cluster.autoscaling.scaleDownEnabled
+    }
+    disk = {
+      auto_scaling_enabled = module.config.this.backendAtlasMongodb.cluster.disk.autoScalingEnabled
+      size_gb              = module.config.this.backendAtlasMongodb.cluster.disk.sizeGb
+    }
+  }
   vpc = {
     gcp_project_id       = var.google_project_id
     network_name         = module.backend_network.name
