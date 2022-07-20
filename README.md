@@ -28,26 +28,32 @@ It using terraform to deploy infrastracture and Google Cloud Platform as cloud p
 | Name | Description |
 | ---- | ----------- |
 | `google_project_id` | Google Project ID to use. |
-| `google_region` | Google Region, where we should deploy resources. Default: `europe-west3` |
-| `backend_application.image` | Backend application image URL. |
-| `backend_application.max_scale` | Instances limit of backend application. |
-| `backend_application.vpc_connector.machine_type` | Machine type of VPC connector. `f1-micro`, `e2-micro`, or `e2-standard-4`. [Docs](https://cloud.google.com/vpc/docs/configure-serverless-vpc-access) |
-| `backend_application.vpc_connector.min_instances` | Minimum instances number of VPC connector. From 2 to 9. |
-| `backend_application.vpc_connector.max_instances` | Minimum instances number of VPC connector. From 3 to 10. |
-| `backend_redis.memory_size_gb` | Memory size of Backend Redis cluster. |
-| `backend_redis.tier` | Tier of Backend Redis cluster. `BASIC` or `STANDARD_HA`. [Docs](https://cloud.google.com/memorystore/docs/redis/pricing#instance_pricing_with_no_read_replicas) |
-| `backend_atlas_mongodb.project_id` | MongoDB Atlas project identifier. |
-| `backend_atlas_mongodb.cluster.name` | MongoDB new cluster name to use. |
-| `backend_atlas_mongodb.cluster.type` | MongoDB cluster type. |
-| `backend_atlas_mongodb.cluster.cloud_backup` | Enable/disable MongoDB cluster backup. |
-| `backend_atlas_mongodb.cluster.instance_size_name` | MongoDB cluster size name. [Docs.](https://www.mongodb.com/docs/atlas/billing/cluster-configuration-costs/#std-label-server-number-costs) |
-| `backend_atlas_mongodb.cluster.region_name` | MongoDB cluster region name. Choose from GCP regions. [Docs.](https://www.mongodb.com/docs/atlas/reference/google-gcp/#std-label-google-gcp) |
-| `backend_atlas_mongodb.cluster.autoscaling.enabled` | Enable/disable MongoDB cluster autoscaling. |
-| `backend_atlas_mongodb.cluster.autoscaling.scale_down_enabled` | Enable/disable MongoDB cluster scaling down. |
-| `backend_atlas_mongodb.cluster.autoscaling.max_instance_size` | MongoDB cluster maximum instances size for autoscaling. [Docs.](https://www.mongodb.com/docs/atlas/billing/cluster-configuration-costs/#std-label-server-number-costs) |
-| `backend_atlas_mongodb.cluster.autoscaling.min_instance_size` | MongoDB cluster minimum instances size for autoscaling. [Docs.](https://www.mongodb.com/docs/atlas/billing/cluster-configuration-costs/#std-label-server-number-costs) |
-| `backend_atlas_mongodb.cluster.disk.auto_scaling_enabled` | Enable/disable MongoDB cluster disk autoscaling. |
-| `backend_atlas_mongodb.cluster.disk.size_gb` | MongoDB cluster disk size. |
+| `google_region` | Google Region, where we should deploy resources. Default: `europe-west3`. |
+| `config_url` | URL to configuration file. See [configuration properties](#configuration-properties). |
+| `config_access_token` | Access token to request a configuration file. [GitHub example](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). |
+| `backend_application_image` | Backend application image URL. For example: `gcr.io/heartbeatlive/backend_server:v1`. |
+
+## Configuration Properties
+| Name | Description |
+| ---- | ----------- |
+| `backendApplication.maxScale` | Instances limit of backend application. |
+| `backendApplication.vpcConnector.machineType` | Machine type of VPC connector. `f1-micro`, `e2-micro`, or `e2-standard-4`. [Docs](https://cloud.google.com/vpc/docs/configure-serverless-vpc-access) |
+| `backendApplication.vpcConnector.minInstances` | Minimum instances number of VPC connector. From 2 to 9. |
+| `backendApplication.vpcConnector.maxInstances` | Minimum instances number of VPC connector. From 3 to 10. |
+| `backendRedis.memorySizeGb` | Memory size of Backend Redis cluster. |
+| `backendRedis.tier` | Tier of Backend Redis cluster. `BASIC` or `STANDARD_HA`. [Docs](https://cloud.google.com/memorystore/docs/redis/pricing#instance_pricing_with_no_read_replicas) |
+| `backendAtlasMongodb.projectId` | MongoDB Atlas project identifier. |
+| `backendAtlasMongodb.cluster.name` | MongoDB new cluster name to use. |
+| `backendAtlasMongodb.cluster.type` | MongoDB cluster type. |
+| `backendAtlasMongodb.cluster.cloudBackup` | Enable/disable MongoDB cluster backup. |
+| `backendAtlasMongodb.cluster.instanceSizeName` | MongoDB cluster size name. [Docs.](https://www.mongodb.com/docs/atlas/billing/cluster-configuration-costs/#std-label-server-number-costs) |
+| `backendAtlasMongodb.cluster.regionName` | MongoDB cluster region name. Choose from GCP regions. [Docs.](https://www.mongodb.com/docs/atlas/reference/google-gcp/#std-label-google-gcp) |
+| `backendAtlasMongodb.cluster.autoscaling.enabled` | Enable/disable MongoDB cluster autoscaling. |
+| `backendAtlasMongodb.cluster.autoscaling.scaleDownEnabled` | Enable/disable MongoDB cluster scaling down. |
+| `backendAtlasMongodb.cluster.autoscaling.maxInstanceSize` | MongoDB cluster maximum instances size for autoscaling. [Docs.](https://www.mongodb.com/docs/atlas/billing/cluster-configuration-costs/#std-label-server-number-costs) |
+| `backendAtlasMongodb.cluster.autoscaling.minInstanceSize` | MongoDB cluster minimum instances size for autoscaling. [Docs.](https://www.mongodb.com/docs/atlas/billing/cluster-configuration-costs/#std-label-server-number-costs) |
+| `backendAtlasMongodb.cluster.disk.autoScalingEnabled` | Enable/disable MongoDB cluster disk autoscaling. |
+| `backendAtlasMongodb.cluster.disk.sizeGb` | MongoDB cluster disk size. |
 
 ## Outputs
 | Name | Description |
