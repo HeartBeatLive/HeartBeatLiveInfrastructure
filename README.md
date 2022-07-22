@@ -37,6 +37,8 @@ It using terraform to deploy infrastracture and Google Cloud Platform as cloud p
 | Name | Description |
 | ---- | ----------- |
 | `backendApplication.maxScale` | Instances limit of backend application. |
+| `backendApplication.configSecret.id` | GCP secret identifier of application configuration (should be in yaml format). |
+| `backendApplication.configSecret.version` | GCP secret version of application configuration. Possible value: `latest`. |
 | `backendApplication.vpcConnector.machineType` | Machine type of VPC connector. `f1-micro`, `e2-micro`, or `e2-standard-4`. [Docs](https://cloud.google.com/vpc/docs/configure-serverless-vpc-access) |
 | `backendApplication.vpcConnector.minInstances` | Minimum instances number of VPC connector. From 2 to 9. |
 | `backendApplication.vpcConnector.maxInstances` | Minimum instances number of VPC connector. From 3 to 10. |
