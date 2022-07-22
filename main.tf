@@ -68,10 +68,10 @@ module "backend_service" {
       port = module.backend_redis.port
     }
     mongodb = {
-      uri                     = module.backend_mongo.connection_link
-      username                = module.backend_mongo.backend_application_credentials.username
-      password                = module.backend_mongo.backend_application_credentials.password
-      authentication_database = module.backend_mongo.backend_application_credentials.auth_database_name
+      uri                     = module.backend_mongodb.connection_link
+      username                = module.backend_mongodb.backend_application_credentials.username
+      password                = module.backend_mongodb.backend_application_credentials.password
+      authentication_database = module.backend_mongodb.backend_application_credentials.auth_database_name
     }
     secret = {
       id      = module.config.this.backendApplication.configSecret.id
