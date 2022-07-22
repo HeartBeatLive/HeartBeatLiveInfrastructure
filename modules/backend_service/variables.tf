@@ -24,3 +24,22 @@ variable "vpc_connector" {
     max_instances : number
   })
 }
+
+variable "application_config" {
+  type = object({
+    secret : object({
+      id : string,
+      version : string
+    }),
+    redis : object({
+      host : string,
+      port : number
+    }),
+    mongodb : object({
+      uri : string,
+      authentication_database : string,
+      username : string,
+      password : string
+    })
+  })
+}
