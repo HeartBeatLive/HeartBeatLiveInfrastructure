@@ -50,33 +50,14 @@ module "backend_service" {
   google_project_id = var.google_project_id
   google_region     = var.google_region
   vpc_subnet_name   = module.backend_network.subnet_name
-
   application = {
     image     = var.backend_application_image
     max_scale = module.config.this.backendApplication.maxScale
   }
-
   vpc_connector = {
     machine_type  = module.config.this.backendApplication.vpcConnector.machineType
     min_instances = module.config.this.backendApplication.vpcConnector.minInstances
     max_instances = module.config.this.backendApplication.vpcConnector.maxInstances
-  }
-
-  application_config = {
-    redis = {
-      host = module.backend_redis.host
-      port = module.backend_redis.port
-    }
-    mongodb = {
-      uri                     = module.backend_mongo.connection_link
-      username                = module.backend_mongo.backend_application_credentials.username
-      password                = module.backend_mongo.backend_application_credentials.password
-      authentication_database = module.backend_mongo.backend_application_credentials.auth_database_name
-    }
-    secret = {
-      id      = module.config.this.backendApplication.configSecret.id
-      version = module.config.this.backendApplication.configSecret.version
-    }
   }
 }
 
