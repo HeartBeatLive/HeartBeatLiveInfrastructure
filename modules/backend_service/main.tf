@@ -20,6 +20,33 @@ resource "google_cloud_run_service" "main" {
     spec {
       containers {
         image = var.application.image
+
+        args = [
+          "redis.host=${var.application_config.redis.host}",
+          "redis.port=${var.application_config.redis.port}",
+          "spring.data.mongodb.uri=${var.application_config.mongodb.uri}",
+          "spring.data.mongodb.username=${var.application_config.mongodb.username}",
+          "spring.data.mongodb.password=${var.application_config.mongodb.password}",
+          "spring.data.mongodb.authentication-database=${var.application_config.mongodb.authentication_database}"
+        ]
+
+        volume_mounts {
+          name       = "config-volume"
+          mount_path = "/config"
+        }
+      }
+
+      volumes {
+        name = "config-volume"
+
+        secret {
+          secret_name = var.application_config.secret.id
+          items {
+            key  = var.application_config.secret.version
+            path = "application.yml"
+            mode = 0644
+          }
+        }
       }
     }
   }
