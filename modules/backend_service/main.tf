@@ -44,7 +44,7 @@ resource "google_cloud_run_service" "main" {
           items {
             key  = var.application_config.secret.version
             path = "application.yml"
-            mode = 0644
+            mode = 256 # 0400
           }
         }
       }
