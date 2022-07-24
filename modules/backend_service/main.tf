@@ -114,7 +114,7 @@ module "backend_vpc_connector" {
 # ============================
 
 locals {
-  serviceAccountName = "backend-cloud-run@${var.google_project_id}.iam.gserviceaccount.com"
+  serviceAccountName = "backend-cloud-run-sa@${var.google_project_id}.iam.gserviceaccount.com"
 }
 
 resource "google_service_account" "main" {
