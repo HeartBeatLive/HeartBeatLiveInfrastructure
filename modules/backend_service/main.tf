@@ -4,6 +4,10 @@ resource "google_project_service" "cloud_run_api" {
   disable_on_destroy = true
 }
 
+# ============================
+#          Cloud Run
+# ============================
+
 resource "google_cloud_run_service" "main" {
   name     = "backend-rest-api-app"
   location = var.google_region
@@ -19,6 +23,8 @@ resource "google_cloud_run_service" "main" {
     }
 
     spec {
+      service_account_name = local.serviceAccountName
+
       containers {
         image = var.application.image
 
@@ -77,9 +83,14 @@ resource "google_cloud_run_service" "main" {
   depends_on = [
     google_project_service.cloud_run_api,
     google_secret_manager_secret_version.mongodb_uri_version,
-    google_secret_manager_secret_iam_member.application_config_access
+    google_secret_manager_secret_iam_member.application_config_access,
+    module.service_account_bindings
   ]
 }
+
+# ============================
+#        VPC Connector
+# ============================
 
 module "backend_vpc_connector" {
   source     = "terraform-google-modules/network/google//modules/vpc-serverless-connector-beta"
@@ -97,6 +108,35 @@ module "backend_vpc_connector" {
     }
   ]
 }
+
+# ============================
+#       Service Account
+# ============================
+
+locals {
+  serviceAccountName = "backend-cloud-run@${var.google_project_id}.iam.gserviceaccount.com"
+}
+
+resource "google_service_account" "main" {
+  account_id   = "backend-cloud-run-sa"
+  display_name = "Backend Cloud Run Service Account"
+}
+
+module "service_account_bindings" {
+  source  = "terraform-google-modules/iam/google//modules/service_accounts_iam"
+  version = "7.4.1"
+
+  service_accounts = [google_service_account.main.email]
+  project          = var.google_project_id
+  mode             = "additive"
+  bindings = {
+    "roles/firebaseauth.admin" = ["serviceAccount:${local.serviceAccountName}"]
+  }
+}
+
+# ============================
+#      Allow Web Requests
+# ============================
 
 resource "google_cloud_run_service_iam_member" "allow_web_requests" {
   service  = google_cloud_run_service.main.name

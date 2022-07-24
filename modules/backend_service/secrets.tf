@@ -1,11 +1,3 @@
-data "google_project" "project" {
-}
-
-locals {
-  # TODO refactor with custom service account
-  serviceAccountName = "${data.google_project.project.number}-compute@developer.gserviceaccount.com"
-}
-
 # ============================
 #         MongoDB URI
 # ============================
