@@ -38,6 +38,7 @@ variable "application_config" {
     }),
     mongodb : object({
       uri : string,
+      database : string,
       authentication_database : string
     })
   })

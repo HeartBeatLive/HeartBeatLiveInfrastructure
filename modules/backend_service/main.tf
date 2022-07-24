@@ -37,6 +37,10 @@ resource "google_cloud_run_service" "main" {
           }
         }
         env {
+          name  = "SPRING_DATA_MONGODB_DATABASE"
+          value = var.application_config.mongodb.database
+        }
+        env {
           name  = "SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE"
           value = var.application_config.mongodb.authentication_database
         }

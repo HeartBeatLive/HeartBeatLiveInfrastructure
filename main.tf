@@ -77,6 +77,7 @@ module "backend_service" {
     }
     mongodb = {
       uri                     = module.backend_mongodb.backend_application_credentials.uri
+      database                = module.backend_mongodb.backend_application_credentials.database
       authentication_database = module.backend_mongodb.backend_application_credentials.auth_database_name
     }
     secret = {
