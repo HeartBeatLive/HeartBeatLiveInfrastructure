@@ -32,6 +32,11 @@ resource "mongodbatlas_database_user" "application_db_user" {
     role_name     = "dbAdmin"
     database_name = local.application_db_name
   }
+
+  roles {
+    role_name     = "readWrite"
+    database_name = local.application_db_name
+  }
 }
 
 resource "mongodbatlas_cluster" "main" {
