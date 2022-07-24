@@ -22,6 +22,13 @@ terraform {
       version = "3.3.2"
     }
   }
+
+  cloud {
+    organization = "munoon"
+    workspaces {
+      name = "HeartBeatLiveInfrastructure"
+    }
+  }
 }
 
 provider "google" {
@@ -53,7 +60,8 @@ module "backend_service" {
 
   application = {
     image     = var.backend_application_image
-    max_scale = module.config.this.backendApplication.maxScale
+    max_scale = module.config.this.backendApplication.scale.max,
+    min_scale = module.config.this.backendApplication.scale.min
   }
 
   vpc_connector = {
@@ -68,9 +76,7 @@ module "backend_service" {
       port = module.backend_redis.port
     }
     mongodb = {
-      uri                     = module.backend_mongodb.connection_link
-      username                = module.backend_mongodb.backend_application_credentials.username
-      password                = module.backend_mongodb.backend_application_credentials.password
+      uri                     = module.backend_mongodb.backend_application_credentials.uri
       authentication_database = module.backend_mongodb.backend_application_credentials.auth_database_name
     }
     secret = {

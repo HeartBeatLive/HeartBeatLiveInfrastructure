@@ -12,6 +12,10 @@ terraform {
   }
 }
 
+locals {
+  application_db_name = "application-db"
+}
+
 resource "random_password" "mongodb_application_user_password" {
   length           = 24
   special          = true
@@ -25,8 +29,8 @@ resource "mongodbatlas_database_user" "application_db_user" {
   auth_database_name = "admin"
 
   roles {
-    role_name     = "readWrite"
-    database_name = "application-db"
+    role_name     = "dbAdmin"
+    database_name = local.application_db_name
   }
 }
 

@@ -13,7 +13,8 @@ variable "vpc_subnet_name" {
 variable "application" {
   type = object({
     image : string,
-    max_scale : number
+    max_scale : number,
+    min_scale : number
   })
 }
 
@@ -37,9 +38,7 @@ variable "application_config" {
     }),
     mongodb : object({
       uri : string,
-      authentication_database : string,
-      username : string,
-      password : string
+      authentication_database : string
     })
   })
 }

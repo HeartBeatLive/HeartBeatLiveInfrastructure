@@ -12,6 +12,7 @@ resource "google_cloud_run_service" "main" {
     metadata {
       annotations = {
         "autoscaling.knative.dev/maxScale"        = tostring(var.application.max_scale)
+        "autoscaling.knative.dev/minScale"        = tostring(var.application.min_scale)
         "run.googleapis.com/vpc-access-connector" = tolist(module.backend_vpc_connector.connector_ids)[0]
         "run.googleapis.com/vpc-access-egress"    = "all-traffic"
       }
@@ -21,18 +22,31 @@ resource "google_cloud_run_service" "main" {
       containers {
         image = var.application.image
 
-        args = [
-          "--redis.host=${var.application_config.redis.host}",
-          "--redis.port=${var.application_config.redis.port}",
-          "--spring.data.mongodb.uri=${var.application_config.mongodb.uri}",
-          "--spring.data.mongodb.username=${var.application_config.mongodb.username}",
-          "--spring.data.mongodb.password=${var.application_config.mongodb.password}",
-          "--spring.data.mongodb.authentication-database=${var.application_config.mongodb.authentication_database}"
-        ]
-
         volume_mounts {
           name       = "config-volume"
-          mount_path = "/config"
+          mount_path = "/app/config"
+        }
+
+        env {
+          name = "SPRING_DATA_MONGODB_URI"
+          value_from {
+            secret_key_ref {
+              name = google_secret_manager_secret.mongodb_uri.secret_id
+              key  = "latest"
+            }
+          }
+        }
+        env {
+          name  = "SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE"
+          value = var.application_config.mongodb.authentication_database
+        }
+        env {
+          name  = "SPRING_REDIS_HOST"
+          value = var.application_config.redis.host
+        }
+        env {
+          name  = "SPRING_REDIS_PORT"
+          value = var.application_config.redis.port
         }
       }
 
@@ -56,7 +70,11 @@ resource "google_cloud_run_service" "main" {
     latest_revision = true
   }
 
-  depends_on = [google_project_service.cloud_run_api]
+  depends_on = [
+    google_project_service.cloud_run_api,
+    google_secret_manager_secret_version.mongodb_uri_version,
+    google_secret_manager_secret_iam_member.application_config_access
+  ]
 }
 
 module "backend_vpc_connector" {
