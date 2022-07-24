@@ -122,16 +122,10 @@ resource "google_service_account" "main" {
   display_name = "Backend Cloud Run Service Account"
 }
 
-module "service_account_bindings" {
-  source  = "terraform-google-modules/iam/google//modules/service_accounts_iam"
-  version = "7.4.1"
-
-  service_accounts = [google_service_account.main.email]
-  project          = var.google_project_id
-  mode             = "additive"
-  bindings = {
-    "roles/firebaseauth.admin" = ["serviceAccount:${local.serviceAccountName}"]
-  }
+resource "google_project_iam_member" "project" {
+  role       = "roles/firebaseauth.admin"
+  member     = "serviceAccount:${local.serviceAccountName}"
+  depends_on = [google_service_account.main]
 }
 
 # ============================

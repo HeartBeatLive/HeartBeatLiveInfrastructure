@@ -15,10 +15,13 @@ resource "google_secret_manager_secret_version" "mongodb_uri_version" {
 }
 
 resource "google_secret_manager_secret_iam_member" "mongodb_uri_access" {
-  secret_id  = google_secret_manager_secret.mongodb_uri.id
-  role       = "roles/secretmanager.secretAccessor"
-  member     = "serviceAccount:${local.serviceAccountName}"
-  depends_on = [google_secret_manager_secret.mongodb_uri]
+  secret_id = google_secret_manager_secret.mongodb_uri.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${local.serviceAccountName}"
+  depends_on = [
+    google_secret_manager_secret.mongodb_uri,
+    module.service_account_bindings
+  ]
 }
 
 # ============================
@@ -26,7 +29,8 @@ resource "google_secret_manager_secret_iam_member" "mongodb_uri_access" {
 # ============================
 
 resource "google_secret_manager_secret_iam_member" "application_config_access" {
-  secret_id = var.application_config.secret.id
-  role      = "roles/secretmanager.secretAccessor"
-  member    = "serviceAccount:${local.serviceAccountName}"
+  secret_id  = var.application_config.secret.id
+  role       = "roles/secretmanager.secretAccessor"
+  member     = "serviceAccount:${local.serviceAccountName}"
+  depends_on = [module.service_account_bindings]
 }
