@@ -84,7 +84,7 @@ resource "google_cloud_run_service" "main" {
     google_project_service.cloud_run_api,
     google_secret_manager_secret_version.mongodb_uri_version,
     google_secret_manager_secret_iam_member.application_config_access,
-    module.service_account_bindings
+    google_project_iam_member.cloud_run_service_account_firebase_auth_role
   ]
 }
 
@@ -122,7 +122,8 @@ resource "google_service_account" "main" {
   display_name = "Backend Cloud Run Service Account"
 }
 
-resource "google_project_iam_member" "project" {
+resource "google_project_iam_member" "cloud_run_service_account_firebase_auth_role" {
+  project    = var.google_project_id
   role       = "roles/firebaseauth.admin"
   member     = "serviceAccount:${local.serviceAccountName}"
   depends_on = [google_service_account.main]

@@ -20,7 +20,7 @@ resource "google_secret_manager_secret_iam_member" "mongodb_uri_access" {
   member    = "serviceAccount:${local.serviceAccountName}"
   depends_on = [
     google_secret_manager_secret.mongodb_uri,
-    module.service_account_bindings
+    google_service_account.main
   ]
 }
 
@@ -32,5 +32,5 @@ resource "google_secret_manager_secret_iam_member" "application_config_access" {
   secret_id  = var.application_config.secret.id
   role       = "roles/secretmanager.secretAccessor"
   member     = "serviceAccount:${local.serviceAccountName}"
-  depends_on = [module.service_account_bindings]
+  depends_on = [google_service_account.main]
 }
