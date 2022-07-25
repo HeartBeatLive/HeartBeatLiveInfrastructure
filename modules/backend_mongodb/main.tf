@@ -39,6 +39,10 @@ resource "mongodbatlas_database_user" "application_db_user" {
   }
 }
 
+locals {
+  dedicated_cluster_count = var.atlas_cluster.mode == "DEDICATED" ? 1 : 0
+}
+
 resource "mongodbatlas_cluster" "main" {
   project_id             = var.atlas_project_id
   name                   = var.atlas_cluster.name
@@ -56,4 +60,17 @@ resource "mongodbatlas_cluster" "main" {
   disk_size_gb                = var.atlas_cluster.disk.size_gb
   provider_instance_size_name = var.atlas_cluster.instance_size_name
   provider_region_name        = var.atlas_cluster.region_name
+
+  count = local.dedicated_cluster_count
+}
+
+resource "mongodbatlas_serverless_instance" "main" {
+  project_id = var.atlas_project_id
+  name       = var.atlas_cluster.name
+
+  provider_settings_backing_provider_name = "GCP"
+  provider_settings_provider_name         = "SERVERLESS"
+  provider_settings_region_name           = var.atlas_cluster.region_name
+
+  count = var.atlas_cluster.mode == "SERVERLESS" ? 1 : 0
 }

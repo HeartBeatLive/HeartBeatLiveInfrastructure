@@ -101,6 +101,7 @@ module "backend_mongodb" {
 
   atlas_project_id = module.config.this.backendAtlasMongodb.projectId
   atlas_cluster = {
+    mode               = module.config.this.backendAtlasMongodb.cluster.mode
     name               = module.config.this.backendAtlasMongodb.cluster.name
     type               = module.config.this.backendAtlasMongodb.cluster.type
     cloud_backup       = module.config.this.backendAtlasMongodb.cluster.cloudBackup

@@ -4,6 +4,7 @@ variable "atlas_project_id" {
 
 variable "atlas_cluster" {
   type = object({
+    mode : string,
     name : string,
     type : string,
     cloud_backup : bool,
