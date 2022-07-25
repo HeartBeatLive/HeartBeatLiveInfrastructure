@@ -25,4 +25,6 @@ resource "mongodbatlas_project_ip_access_list" "backend_network" {
   project_id = var.atlas_project_id
   cidr_block = var.vpc.ip_access_cidr_block
   comment    = "GCP backend-network application"
+
+  count = local.dedicated_cluster_count
 }
