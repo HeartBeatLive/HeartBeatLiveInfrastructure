@@ -36,7 +36,8 @@ It using terraform to deploy infrastracture and Google Cloud Platform as cloud p
 ## Configuration Properties
 | Name | Description |
 | ---- | ----------- |
-| `backendApplication.maxScale` | Instances limit of backend application. |
+| `backendApplication.scale.min` | Minimum instances limit of backend application. |
+| `backendApplication.scale.max` | Maximum instances limit of backend application. |
 | `backendApplication.configSecret.id` | GCP secret identifier of application configuration (should be in yaml format). |
 | `backendApplication.configSecret.version` | GCP secret version of application configuration. Possible value: `latest`. |
 | `backendApplication.vpcConnector.machineType` | Machine type of VPC connector. `f1-micro`, `e2-micro`, or `e2-standard-4`. [Docs](https://cloud.google.com/vpc/docs/configure-serverless-vpc-access) |
@@ -45,6 +46,7 @@ It using terraform to deploy infrastracture and Google Cloud Platform as cloud p
 | `backendRedis.memorySizeGb` | Memory size of Backend Redis cluster. |
 | `backendRedis.tier` | Tier of Backend Redis cluster. `BASIC` or `STANDARD_HA`. [Docs](https://cloud.google.com/memorystore/docs/redis/pricing#instance_pricing_with_no_read_replicas) |
 | `backendAtlasMongodb.projectId` | MongoDB Atlas project identifier. |
+| `backendAtlasMongodb.cluster.mode` | MongoDB cluster mode. `DEDICATED` or `SERVERLESS`. Use `DEDICATED` on production. You need to manualy provide access for backend application when using `SERVERLESS` cluster mode. |
 | `backendAtlasMongodb.cluster.name` | MongoDB new cluster name to use. |
 | `backendAtlasMongodb.cluster.type` | MongoDB cluster type. |
 | `backendAtlasMongodb.cluster.cloudBackup` | Enable/disable MongoDB cluster backup. |
