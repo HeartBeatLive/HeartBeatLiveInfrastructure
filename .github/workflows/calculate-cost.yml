@@ -21,8 +21,7 @@ jobs:
 
       - name: Generate Infracost cost estimate baseline
         run: |
-          infracost breakdown --path=${TF_ROOT} \
-                              --format=json \
+          infracost breakdown --format=json \
                               --out-file=/tmp/infracost-base.json
 
       - name: Checkout PR branch
@@ -30,8 +29,7 @@ jobs:
 
       - name: Generate Infracost diff
         run: |
-          infracost diff --path=${TF_ROOT} \
-                          --format=json \
+          infracost diff --format=json \
                           --compare-to=/tmp/infracost-base.json \
                           --out-file=/tmp/infracost.json
 
