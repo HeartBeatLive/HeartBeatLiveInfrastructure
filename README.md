@@ -63,3 +63,4 @@ It using terraform to deploy infrastracture and Google Cloud Platform as cloud p
 | Name | Description |
 | ---- | ----------- |
 | `rest_api_url` | Base URL, on which REST API is availiable. |
+| `backend_egress_ip_address` | IP Address from which backend application doing it's all IP requests. |
