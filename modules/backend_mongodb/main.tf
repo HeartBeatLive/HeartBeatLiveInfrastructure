@@ -40,7 +40,8 @@ resource "mongodbatlas_database_user" "application_db_user" {
 }
 
 locals {
-  dedicated_cluster_count = var.atlas_cluster.mode == "DEDICATED" ? 1 : 0
+  dedicated_cluster_count  = var.atlas_cluster.mode == "DEDICATED" ? 1 : 0
+  serverless_cluster_count = var.atlas_cluster.mode == "SERVERLESS" ? 1 : 0
 }
 
 resource "mongodbatlas_cluster" "main" {
@@ -72,5 +73,5 @@ resource "mongodbatlas_serverless_instance" "main" {
   provider_settings_provider_name         = "SERVERLESS"
   provider_settings_region_name           = var.atlas_cluster.region_name
 
-  count = var.atlas_cluster.mode == "SERVERLESS" ? 1 : 0
+  count = local.serverless_cluster_count
 }

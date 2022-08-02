@@ -31,3 +31,7 @@ variable "vpc" {
     ip_access_cidr_block : string
   })
 }
+
+variable "backend_application_ip_address" {
+  type = string
+}

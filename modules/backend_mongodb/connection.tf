@@ -28,3 +28,11 @@ resource "mongodbatlas_project_ip_access_list" "backend_network" {
 
   count = local.dedicated_cluster_count
 }
+
+resource "mongodbatlas_project_ip_access_list" "backend_application" {
+  project_id = var.atlas_project_id
+  ip_address = var.backend_application_ip_address
+  comment    = "GCP backend application IP address"
+
+  count = local.serverless_cluster_count
+}

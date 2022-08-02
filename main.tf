@@ -51,6 +51,14 @@ module "backend_network" {
   google_region     = var.google_region
 }
 
+module "backend_egress_gateway" {
+  source = "./modules/backend_egress_gateway"
+
+  google_project_id    = var.google_project_id
+  google_region        = var.google_region
+  backend_network_name = module.backend_network.name
+}
+
 module "backend_service" {
   source = "./modules/backend_service"
 
@@ -124,4 +132,5 @@ module "backend_mongodb" {
     network_link         = module.backend_network.link
     ip_access_cidr_block = module.backend_network.subnet_cidr
   }
+  backend_application_ip_address = module.backend_egress_gateway.ip_address
 }
