@@ -30,7 +30,7 @@ resource "google_cloud_run_service" "main" {
 
         volume_mounts {
           name       = "config-volume"
-          mount_path = "/app/config"
+          mount_path = "/config"
         }
 
         env {
