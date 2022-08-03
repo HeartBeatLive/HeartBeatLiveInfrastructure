@@ -1,0 +1,74 @@
+name: 'Calculate Infrastructure Cost'
+
+on:
+  pull_request:
+
+jobs:
+  calculate-cost:
+    name: Calculate Infrastructure Cost
+    runs-on: ubuntu-latest
+
+    env:
+      INFRACOST_ENABLE_CLOUD: true
+      TERRAFORM_VARIABLES_BASE64: ${{ secrets.TERRAFORM_VARIABLES_BASE64 }}
+      MONGODB_ATLAS_PUBLIC_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_KEY }}
+      MONGODB_ATLAS_PRIVATE_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_KEY }}
+      GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    steps:
+      - name: Setup Infracost
+        uses: infracost/actions/setup@v2
+        with:
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
+
+      - name: Checkout base branch
+        uses: actions/checkout@v2
+        with:
+          ref: '${{ github.event.pull_request.base.ref }}'
+
+      - name: Initialize terraform
+        run: |
+          terraform init
+
+      - name: Generate terraform plan
+        run: |
+          echo $TERRAFORM_VARIABLES_BASE64 | base64 --decode >> terraform.tfvars;
+          terraform plan -out plan.tfplan -input=false;
+          terraform show -json plan.tfplan > plan.json;
+
+      - name: Generate Infracost cost estimate baseline
+        run: |
+          infracost breakdown --path=plan.json \
+                              --format=json \
+                              --usage-file infracost-usage.yml \
+                              --out-file=/tmp/infracost-base.json
+
+      - name: Checkout PR branch
+        uses: actions/checkout@v2
+
+      - name: Initialize terraform
+        run: |
+          terraform init
+
+      - name: Generate terraform plan
+        run: |
+          echo $TERRAFORM_VARIABLES_BASE64 | base64 --decode >> terraform.tfvars;
+          terraform plan -out plan.tfplan -input=false;
+          terraform show -json plan.tfplan > plan.json;
+
+      - name: Generate Infracost diff
+        run: |
+          infracost diff --path=plan.json \
+                          --format=json \
+                          --usage-file infracost-usage.yml \
+                          --compare-to=/tmp/infracost-base.json \
+                          --out-file=/tmp/infracost.json
+
+      - name: Post Infracost comment
+        run: |
+            infracost comment github --path=/tmp/infracost.json \
+                                     --policy-path=policy.rego \
+                                     --repo=$GITHUB_REPOSITORY \
+                                     --github-token=${{github.token}} \
+                                     --pull-request=${{github.event.pull_request.number}} \
+                                     --behavior=hide-and-new
