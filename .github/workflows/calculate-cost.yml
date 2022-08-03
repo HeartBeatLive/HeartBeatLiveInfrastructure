@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      TF_ROOT: ./
+      TF_ROOT: .
+      INFRACOST_ENABLE_CLOUD: true
 
     steps:
       - name: Setup Infracost
