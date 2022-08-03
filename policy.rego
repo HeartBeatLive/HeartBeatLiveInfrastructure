@@ -18,8 +18,8 @@ deny[out] {
 	budget = 200.0
 
 	msg := sprintf(
-		"Total monthly cost is too big! It is $%.2f, but the budget is $%.2f.",
-		[to_number(input.totalMonthlyCost), budget],
+		"Total monthly cost must be less than $%.2f (actual cost is $%.2f).",
+		[budget, to_number(input.totalMonthlyCost)],
 	)
 
   	out := {
