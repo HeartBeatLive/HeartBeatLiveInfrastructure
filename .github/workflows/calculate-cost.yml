@@ -11,6 +11,9 @@ jobs:
     env:
       INFRACOST_ENABLE_CLOUD: true
       TERRAFORM_VARIABLES_BASE64: ${{ secrets.TERRAFORM_VARIABLES_BASE64 }}
+      MONGODB_ATLAS_PUBLIC_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_KEY }}
+      MONGODB_ATLAS_PRIVATE_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_KEY }}
+      GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
     steps:
       - name: Setup Infracost
