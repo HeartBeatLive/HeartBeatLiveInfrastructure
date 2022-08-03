@@ -1,0 +1,23 @@
+version: 0.1
+resource_usage:
+  module.backend_egress_gateway.module.cloud_nat.google_compute_router_nat.main:
+    assigned_vms: 2 # Number of VM instances assigned to the NAT gateway
+    monthly_data_processed_gb: 5.0 # Monthly data processed (ingress and egress) by the NAT gateway in GB
+
+  module.backend_redis.google_service_networking_connection.private_service_connection:
+    monthly_egress_data_transfer_gb:
+      same_region: 10 # VMs in the same Google Cloud region.
+      us_or_canada: 0 # From a Google Cloud region in the US or Canada to another Google Cloud region in the US or Canada.
+      europe: 0 # Between Google Cloud regions within Europe.
+      asia: 0 # Between Google Cloud regions within Asia.
+      south_america: 0 # Between Google Cloud regions within South America.
+      oceania: 0 # Indonesia and Oceania to/from any Google Cloud region.
+      worldwide: 0 # to a Google Cloud region on another continent.
+
+  module.backend_service.google_secret_manager_secret.mongodb_uri:
+    active_secret_versions: 1 # Number of active secret versions in each month. NOTE: this is used only when secret versions are not defined.
+    monthly_access_operations: 50 # Monthly number of access operations
+    monthly_rotation_notifications: 0 # Monthly number of rotation notifications
+  
+  module.backend_service.google_secret_manager_secret_version.mongodb_uri_version:
+    monthly_access_operations: 50 # Monthly number of access operations
