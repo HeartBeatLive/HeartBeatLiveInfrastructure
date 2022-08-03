@@ -10,6 +10,7 @@ jobs:
 
     env:
       INFRACOST_ENABLE_CLOUD: true
+      TERRAFORM_VARIABLES_BASE64: ${{ secrets.TERRAFORM_VARIABLES_BASE64 }}
 
     steps:
       - name: Setup Infracost
@@ -24,11 +25,12 @@ jobs:
 
       - name: Initialize terraform
         run: |
-          terraform init
+          terraform init -backend=false
 
       - name: Generate terraform plan
         run: |
-          terraform plan -out plan.tfplan;
+          echo $TERRAFORM_VARIABLES_BASE64 | base64 --decode -o terraform.tfvars;
+          terraform plan -out plan.tfplan -input=false;
           terraform show -json plan.tfplan > plan.json;
 
       - name: Generate Infracost cost estimate baseline
@@ -43,11 +45,12 @@ jobs:
 
       - name: Initialize terraform
         run: |
-          terraform init
+          terraform init -backend=false
 
       - name: Generate terraform plan
         run: |
-          terraform plan -out plan.tfplan;
+          echo $TERRAFORM_VARIABLES_BASE64 | base64 --decode -o terraform.tfvars;
+          terraform plan -out plan.tfplan -input=false;
           terraform show -json plan.tfplan > plan.json;
 
       - name: Generate Infracost diff
