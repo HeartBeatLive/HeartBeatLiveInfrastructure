@@ -22,13 +22,6 @@ terraform {
       version = "3.3.2"
     }
   }
-
-  cloud {
-    organization = "munoon"
-    workspaces {
-      name = "HeartBeatLiveInfrastructure"
-    }
-  }
 }
 
 provider "google" {
